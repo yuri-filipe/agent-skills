@@ -1,0 +1,53 @@
+trigger:
+  branches:
+    include:
+      - breaking/*
+      - feature/*
+      - fix/*
+
+pr:
+  branches:
+    include:
+      - main
+
+resources:
+  repositories:
+    - repository: Pipelines
+      type: git
+      name: DevOps/Pipelines
+
+extends:
+  template: pipelines/angular-frontend-pipeline.yaml@Pipelines
+  parameters:
+    solutionPath: '.'
+    # Tem que bater com o outputPath real do angular.json (projects.<nome>).
+    # Rode `npm run build` local e confira onde o index.html aparece.
+    angularDistPath: 'dist/{{nome-do-projeto-angular-json}}/browser'
+
+    # Nome do app no Consul, sem "/". A pipeline monta
+    # frontends/{{consulProject}}/<qa|prd>/config.json sozinha.
+    consulProject: '{{app}}'
+
+    # Subdominio da aplicacao:
+    #   PRD -> {{app}}.devinfinite.cloud
+    #   QA  -> qa-{{app}}.devinfinite.cloud
+    path: '{{app}}'
+
+    dockerImageName: 'infinite-{{app}}-frontend'
+    dockerComposeProjectName: 'infinite-{{app}}-frontend'
+
+    # OPCIONAL: publicar em outro dominio. Ausente/vazio => devinfinite.cloud.
+    # customDomain: 'meudominio.com'
+    # useRootDomain: true   # exige customDomain informado e diferente de devinfinite.cloud
+
+    # Variable Groups: QA e PRD apontam para Consuls diferentes.
+    variableGroup: 'variable-group-qa'
+    variableGroupPrd: 'variable-group-prd'
+
+    # Minimo exigido pelo Angular 21: 20.19+, 22.12+ ou 24.0+.
+    nodeVersion: '22.x'
+
+    # Nao adicione ANGULAR_DIST_PATH nem APP_SOURCE_DIR aqui: a pipeline ja
+    # injeta os dois automaticamente a partir de angularDistPath/solutionPath.
+    dockerBuildArgs: >-
+      --build-arg NODE_ENV=production

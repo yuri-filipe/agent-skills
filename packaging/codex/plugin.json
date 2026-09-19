@@ -1,0 +1,18 @@
+{
+  "name": "infinite-skills",
+  "version": "1.0.0",
+  "description": "Skills da Infinite para APIs .NET, logs, Zitadel e frontends.",
+  "skills": "./skills/",
+  "author": { "name": "yuri-filipe", "url": "https://github.com/yuri-filipe" },
+  "repository": "https://github.com/yuri-filipe/agent-skills",
+  "interface": {
+    "displayName": "Infinite Skills",
+    "shortDescription": "Padrões de desenvolvimento da Infinite",
+    "longDescription": "Skills para APIs .NET, logs estruturados, autenticação Zitadel, build Angular e configuração Vite/Vue.",
+    "developerName": "yuri-filipe",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://github.com/yuri-filipe/agent-skills",
+    "defaultPrompt": ["Revise esta API conforme os padrões da Infinite."]
+  }
+}

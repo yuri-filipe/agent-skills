@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Infinite.{{Servico}}.Domain/Infinite.{{Servico}}.Domain.csproj" />
+  <Project Path="Infinite.{{Servico}}.Infrastructure/Infinite.{{Servico}}.Infrastructure.csproj" />
+  <Project Path="Infinite.{{Servico}}/Infinite.{{Servico}}.csproj" />
+</Solution>

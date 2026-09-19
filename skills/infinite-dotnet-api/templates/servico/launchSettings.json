@@ -1,0 +1,23 @@
+{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:{{porta-http}}"
+    },
+    "https": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "CONSUL_DOMAIN": "",
+        "CONSUL_BACKEND_TOKEN": ""
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:{{porta-https}};http://localhost:{{porta-http}}"
+    }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json"
+}

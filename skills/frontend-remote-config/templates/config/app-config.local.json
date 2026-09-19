@@ -1,0 +1,4 @@
+{
+  "apiBaseUrl": "https://localhost:7295",
+  "authApiBaseUrl": "https://localhost:7227"
+}

@@ -1,0 +1,33 @@
+{
+  "Cors": {
+    "AllowedOrigins": [
+      "https://app.{{dominio}}",
+      "http://localhost:5173"
+    ]
+  },
+
+  "Autenticacao": {
+    "Habilitada": true,
+
+    "Autoridade": "https://{{ zitadel_domain }}",
+    "IdProjeto": "{{ zitadel_project_id }}",
+    "Audiencias": [ "{{ zitadel_project_id }}" ],
+
+    "ExigirAutenticacaoPorPadrao": true,
+    "ValidarAutoridadeNoStartup": true,
+
+    "PoliticasPorRole": {
+      "{{Politica}}": [ "{{role}}", "admin" ]
+    },
+
+    "PoliticasPorEscopo": {
+      "{{PoliticaEscopo}}": [ "{{escopo}}" ]
+    },
+
+    "OrganizacoesPermitidas": [ "{{organization_id}}" ],
+
+    "ExporSwagger": false,
+    "ClientIdSwagger": "{{client_id_swagger}}",
+    "EscoposSwagger": [ "openid", "profile", "email" ]
+  }
+}

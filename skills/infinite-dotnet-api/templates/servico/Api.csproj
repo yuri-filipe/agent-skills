@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>{{novo-guid}}</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Infinite.Core.Consul" Version="{{versao}}" />
+    <PackageReference Include="Infinite.Core.WebHost" Version="{{versao}}" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="{{versao}}">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="{{versao}}" />
+    <PackageReference Include="Npgsql" Version="{{versao}}" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="{{versao}}" />
+    <!-- Só quando houver integração HTTP externa: -->
+    <!-- <PackageReference Include="Refit.HttpClientFactory" Version="{{versao}}" /> -->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Infinite.{{Servico}}.Domain\Infinite.{{Servico}}.Domain.csproj" />
+    <ProjectReference Include="..\Infinite.{{Servico}}.Infrastructure\Infinite.{{Servico}}.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

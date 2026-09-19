@@ -1,0 +1,34 @@
+trigger:
+  branches:
+    include:
+      - breaking/*
+      - feature/*
+      - fix/*
+
+pr:
+  branches:
+    include:
+      - main
+
+resources:
+  repositories:
+    - repository: Pipelines
+      type: git
+      name: DevOps/Pipelines
+
+extends:
+  template: pipelines/api-pipeline.yaml@Pipelines
+  parameters:
+    solutionPath: 'src/'
+    dockerfilePath: 'Dockerfile'
+    dockerContext: '.'
+    dockerImageName: 'infinite-{{servico}}'
+    dockerComposeProjectName: 'infinite-{{servico}}'
+    apiDomain: '{{dominio-api}}'
+    apiPath: '/{{servico}}'
+    variableGroup: variable-group-qa
+    dockerBuildArgs: >-
+      --build-arg DOTNET_VERSION=10.0
+      --build-arg BUILD_CONFIGURATION=Release
+      --build-arg PROJECT_FILE=src/Infinite.{{Servico}}/Infinite.{{Servico}}.csproj
+      --build-arg APP_DLL=Infinite.{{Servico}}.dll

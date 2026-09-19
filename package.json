@@ -1,0 +1,13 @@
+{
+  "name": "yuri-agent-skills",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "validate": "node scripts/skills.mjs validate",
+    "test": "node --test",
+    "package": "node scripts/skills.mjs package"
+  },
+  "dependencies": { "fflate": "^0.8.2", "yaml": "^2.8.1" }
+}
