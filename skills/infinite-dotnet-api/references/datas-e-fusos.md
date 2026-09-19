@@ -95,8 +95,9 @@ para obter o dia seguinte, nem invente um fim em 23:59:59.999.
 
 ## Compatibilidade e verificação
 
-- Alinhe Microsoft.EntityFrameworkCore.* na mesma versão estável 10.0.x e Npgsql/provider/plugin
-  na linha compatível; consulte o grafo real, incluindo Design e testes.
+- EF Core, Npgsql (+ plugin NodaTime) e NodaTime vêm da `Infinite.Core.Postgres`; o serviço não os
+  referencia direto. Projetos de teste que adicionam um provider (`InMemory`, `Sqlite`) usam a
+  mesma versão 10.0.x do EF da lib; confira no grafo real (`dotnet list package --include-transitive`).
 - A troca isolada `DateTime?` -> `Instant?` em colunas já `timestamptz` não exige regravar
   instantes. Gere/revise migration e snapshot do consumidor. Colunas antigas sem fuso exigem
   conhecer a semântica dos dados antes de qualquer conversão.

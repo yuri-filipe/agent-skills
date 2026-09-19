@@ -4,19 +4,17 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>{{novo-guid}}</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
 
+  <!--
+    EF Core, Design (dotnet ef), Npgsql e NodaTime chegam transitivos pela Infinite.Core.Postgres
+    (via Domain). Não referencie esses pacotes aqui: a versão do EF vem só da lib.
+  -->
   <ItemGroup>
     <PackageReference Include="Infinite.Core.Consul" Version="{{versao}}" />
     <PackageReference Include="Infinite.Core.WebHost" Version="{{versao}}" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="{{versaoEfCore}}">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="{{versao}}" />
-    <PackageReference Include="Npgsql" Version="{{versaoNpgsql}}" />
     <!-- Só quando houver integração HTTP externa: -->
     <!-- <PackageReference Include="Refit.HttpClientFactory" Version="{{versao}}" /> -->
   </ItemGroup>

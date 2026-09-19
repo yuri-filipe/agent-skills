@@ -70,6 +70,8 @@ Ao aplicar, substitua:
         Commands/DeletarBaseCommand.cs
         Queries/ObterPorIdBaseQuery.cs
       {{Modulo}}/
+        Common/
+          Logs/{{Modulo}}Logs.cs               # logs [LoggerMessage] do módulo (quando houver log)
         {{Entidades}}/
           Commands/
           CommandHandlers/
@@ -97,6 +99,9 @@ Regras de pasta:
   compartilham as entidades, promova para `{{Modulo}}/Models/` — mas escolha **um** dos dois por
   módulo e mantenha.
 - `Filters/` contém só extension methods de predicate; `Enums/` só enums do módulo/entidade.
+- `{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs` concentra **todos** os métodos `[LoggerMessage]` do
+  módulo, com o bloco de EventIds no cabeçalho. Handlers e services só chamam
+  `_logger.{Fato}(...)`; nunca declaram log. Ver skill `infinite-api-logs`.
 - `Services/` é para orquestração reutilizada por vários handlers ou integração externa (Refit).
   Não crie service para CRUD simples.
 
@@ -121,6 +126,7 @@ Regras de pasta:
 | Entidade | `{{Entidade}}.cs` | `Models` |
 | Mapping EF | `{{Entidade}}Mapping.cs` | `Infrastructure/Mappings/{{Modulo}}` |
 | Controller | `{{Entidades}}Controller.cs` | `Controllers/{{Modulo}}` |
+| Logs do módulo | `{{Modulo}}Logs.cs` | `{{Modulo}}/Common/Logs` |
 
 Verbos padronizados em português: **Adicionar / Atualizar / Deletar / Pesquisar / Obter…PorId**.
 Não misture com Create/Update/Delete/Get/Search. Para ações fora do CRUD, use verbo de negócio no
@@ -154,6 +160,14 @@ ao criar um serviço ou alterar campos temporais, DTOs, filtros, JSON ou mapping
 `LocalDate`, `LocalTime` e `LocalDateTime` representam valores civis, sem conversão implícita de fuso.
 O JSON (NodaTime e regras estritas) já é configurado por `AddInfiniteApiController`; não registre de novo.
 
+**Pacotes** → EF Core, Design, Npgsql e NodaTime vêm **só** da `Infinite.Core.Postgres`; não
+referencie esses pacotes na API nem no Domain. Swagger e serializador NodaTime vêm da WebHost.
+
+**Logs** → obrigatório o padrão do skill `infinite-api-logs`: métodos `[LoggerMessage]` gerados em
+compilação na classe `{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs` (template
+`templates/comum/ModuloLogs.cs`), EventId por bloco de módulo, template constante. O código de
+negócio só chama o método. Imposto por `src/.editorconfig` (template `templates/servico/editorconfig`).
+
 **Configuração** → tudo vem do Consul: `AddConsulConfig` descarta `appsettings*.json` em runtime.
 Seções mínimas em `templates/servico/consul-config.json`.
 
@@ -184,4 +198,5 @@ Nada mais precisa ser registrado: handlers e validators são varridos por assemb
 - `templates/modulo/` — CRUD completo com placeholders (Commands, CommandHandlers, Queries,
   QueryHandlers, Dtos, Mappers, Validators, Filters, Models, Mapping EF, Controller).
 - `templates/comum/` — bases compartilhadas (`ObterPorIdBaseQuery`, `DeletarBaseCommand`,
-  query base por módulo) e o padrão de integração externa (Options + Refit + service).
+  query base por módulo), classe de logs do módulo (`ModuloLogs.cs`) e o padrão de integração
+  externa (Options + Refit + service).

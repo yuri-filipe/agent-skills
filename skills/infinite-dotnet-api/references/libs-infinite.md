@@ -13,13 +13,14 @@ em `breaking/timezone`, `Infinite.Core.WebHost` em `breaking/ajustes`, `Infinite
 | Pacote | Onde referenciar | Fornece |
 |---|---|---|
 | `Infinite.Core` | transitivo via Postgres/WebHost | `Response<T>`, `ResponsePaged<T>`, `PagedQueryBase<T>`, `AddInfiniteCqrs`, `IAuditContextAccessor` |
-| `Infinite.Core.Postgres` | `.Domain` | `CoreEntity`, `CoreTableMapping<T>`, `CoreViewMapping<T>`, repositórios, `InfiniteContext`, `AddInfiniteContext`, `InfiniteContextFactoryBase`, `PredicateBuilder`; traz EF Core 10, Npgsql + plugin NodaTime |
+| `Infinite.Core.Postgres` | `.Domain` | `CoreEntity`, `CoreTableMapping<T>`, `CoreViewMapping<T>`, repositórios, `InfiniteContext`, `AddInfiniteContext`, `InfiniteContextFactoryBase`, `PredicateBuilder`; traz EF Core 10 (inclusive `Design`), Npgsql + plugin NodaTime e NodaTime |
 | `Infinite.Core.WebHost` | API | `InfiniteApiController`, `AddInfiniteApiController`, `UseInfiniteApi`, auth Zitadel, observabilidade, JSON NodaTime, Swagger |
 | `Infinite.Core.Consul` | API | `AddConsulConfig`, `GetConsulConfiguration<T>`, `IConsulConfigurationProvider` |
-| `NodaTime` | Domain quando expõe tipos temporais | `Instant`, `LocalDate`, `LocalTime`, `LocalDateTime`, `DateTimeZoneProviders` |
 
-`NodaTime.Serialization.SystemTextJson` e `Swashbuckle.AspNetCore` chegam **transitivos** pela
-WebHost; não referencie de novo na API. Versões na lib: EF Core 10.0.12, Npgsql 10.0.3,
+Chegam **transitivos** e não devem ser referenciados no serviço: `Microsoft.EntityFrameworkCore`,
+`.Relational`, `.Design`, `Npgsql.EntityFrameworkCore.PostgreSQL` (+ NodaTime) e `NodaTime` pela
+`Infinite.Core.Postgres`; `NodaTime.Serialization.SystemTextJson` e `Swashbuckle.AspNetCore` pela
+WebHost. A versão do EF é decidida pela lib. Versões na lib: EF Core 10.0.12, Npgsql 10.0.3,
 NodaTime 3.3.4, MediatR 13.1.0, FluentValidation 12.1.0.
 
 Feed privado: `InfiniteNuget` (`src/nuget.config`). Versões são pinadas no `.csproj` — copie as do
@@ -60,9 +61,9 @@ Regras:
 | Exceção no handler | 500 | `{ title, message, effect }` via `ErrorHandlingBehavior` (ver abaixo) |
 | Cliente cancelou | 499 | vazio |
 
-`effect` é o enum numérico `Effect` (`Success=1 … Validation=7`). O CORS da lib não expõe os
-headers de paginação: em chamada cross-origin o navegador não os entrega ao JS. Confirme que
-frontend e API estão na mesma origem, ou alinhe a exposição na lib, antes de depender deles.
+`effect` é o enum numérico `Effect` (`Success=1 … Validation=7`). As políticas CORS da WebHost
+expõem os headers de paginação (`Access-Control-Expose-Headers`) a partir da versão com essa
+correção; em versões anteriores, um frontend em outra origem não consegue lê-los.
 O lado do consumidor está na skill `infinite-frontend-api`.
 
 ## `Infinite.Core.Queries`
@@ -177,8 +178,9 @@ se não for `infinite_api`, `Schema`.
 (licença em `LicenseKeyMediatr` no Consul), handlers, validators FluentValidation e os behaviors:
 
 1. `ValidationBehavior` — roda os validators e lança `ValidationException`; o `Send` responde 422.
-2. `ErrorHandlingBehavior` — captura exceção do handler, registra `LogError` para ela e cada
-   `InnerException`, e devolve `Response.Error` (500). Mensagem padrão
+2. `ErrorHandlingBehavior` — captura exceção do handler, registra **um** log `Error` (EventId 4000,
+   `[LoggerMessage]`) com a exceção anexada (as `InnerException` vão junto) e devolve
+   `Response.Error` (500). Mensagem padrão
    `"Falha ao processar a requisição."`; a request ou a exceção pode implementar
    `IHasFriendlyError` para trocar a mensagem. Cancelamento do cliente não é capturado.
 

@@ -30,23 +30,29 @@ Copie de `templates/servico/`:
 | `launchSettings.json` | `src/Infinite.{{Servico}}/Properties/launchSettings.json` |
 | `InfiniteContextFactory.cs` | `src/Infinite.{{Servico}}/Postgres/InfiniteContextFactory.cs` |
 | `azure-pipelines.yml` | raiz do repo |
+| `editorconfig` | `src/.editorconfig` (torna obrigatório o padrão de logs; ver skill `infinite-api-logs`) |
 | `consul-config.json` | base de `/apis/{{servico}}/{qa|prd}/config.json` no Consul (não vai para o repo) |
 
 Referências de projeto: API → Domain + Infrastructure; Infrastructure → Domain; Domain → nenhum
 projeto interno. **Nunca** Domain → API, nem Domain → Infrastructure.
 
-Resolva os placeholders de versão antes de usar os templates. `{{versaoEfCore}}` deve ser a
-mesma versão estável 10.0.x usada pela `Infinite.Core.Postgres` em todos os pacotes
-Microsoft.EntityFrameworkCore.*, incluindo Design. As libs usam EF Core 10.0.12, Npgsql/provider
-10.0.3 e NodaTime 3.3.4; confira a versão das libs `Infinite.Core.*` publicada no feed.
+Resolva os placeholders `{{versao}}` antes de usar os templates, copiando as versões do serviço de
+referência mais atual e confirmando no feed a versão das libs `Infinite.Core.*`.
+
+**EF Core não é referenciado nos projetos do serviço.** `Microsoft.EntityFrameworkCore`,
+`.Relational`, `.Design`, `Npgsql.EntityFrameworkCore.PostgreSQL` (+ plugin NodaTime) e `NodaTime`
+chegam transitivos pela `Infinite.Core.Postgres` (hoje EF Core 10.0.12, Npgsql 10.0.3, NodaTime
+3.3.4). O `Design` vem sem `PrivateAssets` justamente para o `dotnet ef` funcionar no projeto da
+API. Para mudar a versão do EF, atualize a lib — não adicione `PackageReference` no serviço.
+Isso exige a versão da `Infinite.Core.Postgres` que já traz o `Design` transitivo; com uma versão
+anterior, o `dotnet ef` acusa a falta de `Microsoft.EntityFrameworkCore.Design`.
 
 ## 2. Referências obrigatórias por projeto
 
-- **API**: `Infinite.Core.Consul`, `Infinite.Core.WebHost`, `Microsoft.EntityFrameworkCore.Design`
-  (`PrivateAssets=all`), `Npgsql`. Swagger e o serializador NodaTime chegam pela WebHost.
-  `Refit.HttpClientFactory` só se houver integração externa.
-- **Domain**: `Infinite.Core.Postgres`, `Microsoft.EntityFrameworkCore`,
-  `Npgsql.EntityFrameworkCore.PostgreSQL`, `NodaTime`, `Riok.Mapperly`, `FluentValidation`. `Refit` só se houver
+- **API**: `Infinite.Core.Consul`, `Infinite.Core.WebHost`. Swagger e o serializador NodaTime
+  chegam pela WebHost; EF Core, Design e Npgsql chegam pelo Domain. `Refit.HttpClientFactory` só se
+  houver integração externa.
+- **Domain**: `Infinite.Core.Postgres`, `Riok.Mapperly`, `FluentValidation`. `Refit` só se houver
   cliente externo.
 - **Infrastructure**: só `ProjectReference` para o Domain.
 

@@ -3,14 +3,20 @@
 O nível é o **único filtro barato** na busca do OpenObserve (`severity_text`). Errar o nível é pior
 do que não logar: um `Error` que na verdade é comportamento normal treina o time a ignorar `Error`.
 
-| Nível | `severity_number` | Prefixo no console | Pergunta que ele responde | Quem olha |
-|---|---|---|---|---|
-| `Trace` | 1 | `trce:` | — | ninguém; proibido em `prd` |
-| `Debug` | 5 | `dbug:` | — | só durante investigação local |
-| `Information` | 9 | `info:` | "este estado mudou, e por ordem de quem?" | auditoria, reconstrução de fluxo |
-| `Warning` | 13 | `warn:` | "por que o cliente recebeu 400/403/404?" | quem investiga um chamado |
-| `Error` | 17 | `fail:` | "o que quebrou?" | alerta / plantão |
-| `Critical` | 21 | `crit:` | "a API não sobe" | só a lib |
+Definições da [documentação .NET](https://learn.microsoft.com/pt-br/dotnet/core/extensions/logging/overview),
+com a leitura aplicada às APIs Infinite:
+
+| Nível | Valor | Documentação .NET | Nas APIs Infinite | `severity_number` | Console |
+|---|---|---|---|---|---|
+| `Trace` | 0 | Mais detalhado; pode ter dado confidencial; desabilitado por padrão e **nunca** em produção | proibido em código commitado | 1 | `trce:` |
+| `Debug` | 1 | Depuração e desenvolvimento; volume alto | só durante investigação local, não commitado | 5 | `dbug:` |
+| `Information` | 2 | Fluxo geral do aplicativo, valor de longo prazo | mudança de estado que alguém vai reconstruir; ciclo de job | 9 | `info:` |
+| `Warning` | 3 | Evento anormal ou inesperado que não derruba o aplicativo | operação barrada com comportamento correto; fallback; retry | 13 | `warn:` |
+| `Error` | 4 | Erro/exceção não tratável; falha **da operação atual**, não do aplicativo | operação falhou por bug, dado ou sistema externo | 17 | `fail:` |
+| `Critical` | 5 | Falha que exige atenção imediata (perda de dados, disco cheio) | só as libs (API não sobe) | 21 | `crit:` |
+
+Em produção, `Warning` a `Critical` devem gerar **poucas** mensagens: se um `Warning` dispara a
+cada requisição normal, ele está no nível errado.
 
 ## Regra de decisão
 
@@ -18,7 +24,7 @@ Faça as perguntas nesta ordem e pare na primeira que der "sim":
 
 1. **A API não consegue operar?** → `Critical`. Em código de aplicação, a resposta é sempre não.
 2. **Uma operação falhou por culpa da API, de um bug ou de um sistema externo?** → `Error`.
-   Tem exceção envolvida? Passe-a como primeiro argumento.
+   Tem exceção envolvida? Declare-a como parâmetro `Exception` do método `[LoggerMessage]`.
 3. **A operação foi barrada, mas o comportamento está correto?** (regra de negócio, registro
    inexistente, permissão, conflito, fallback acionado) → `Warning`.
 4. **O fluxo foi normal, mas mudou estado que alguém vai precisar reconstruir depois?**
@@ -61,8 +67,27 @@ using (_logger.BeginScope(new Dictionary<string, object> { ["CicloId"] = cicloId
 
 `IncludeScopes` já está ligado no pipeline da lib, então o escopo chega ao OpenObserve como campo.
 
-## Nível mínimo em produção
+## Configuração de `Logging:LogLevel`
 
-O piso é o padrão do ASP.NET Core (`Information`), ajustável por `Logging:LogLevel` no `config.json`
-do Consul. O que não passa do filtro não vai para o console **nem** para o OpenObserve — por isso
-`Debug` no código é código morto em `prd`, e não "log desligado que dá para ligar depois".
+A API não lê `appsettings.json` em runtime (o `AddConsulConfig` descarta essa fonte). O filtro
+vive no `config.json` do Consul, com a mesma forma da documentação .NET:
+
+```json
+"Logging": {
+  "LogLevel": {
+    "Default": "Information",
+    "Microsoft": "Warning",
+    "Microsoft.Hosting.Lifetime": "Information"
+  }
+}
+```
+
+- `Default` vale para toda categoria sem regra própria; a regra de **prefixo mais longo** vence
+  (`Microsoft.Hosting.Lifetime` sobre `Microsoft`).
+- A categoria é o nome completo da classe (`ILogger<T>`). Para investigar, suba o nível **só da
+  categoria** em análise, por exemplo `"Infinite.Agendamentos.Domain.Comercial": "Debug"` em `qa` —
+  nunca `Default` para `Debug`, nunca `Trace` em `prd`.
+- Abaixo do mínimo, o log não vai para o console **nem** para o OpenObserve: `Debug` no código é
+  código morto em `prd`.
+- A configuração do Consul é lida no startup e não recarrega: mudar o nível exige reiniciar a API.
+- Mudança de nível é configuração do ambiente; só altere quando a tarefa pedir.

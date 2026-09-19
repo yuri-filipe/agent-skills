@@ -107,7 +107,7 @@ export interface Paginacao {
 
 /**
  * Lê os headers de paginação. `total`/`totalPages` ficam null quando o navegador não os
- * expõe (chamada cross-origin sem Access-Control-Expose-Headers); não estime o total.
+ * entrega (API com Infinite.Core.WebHost anterior à exposição no CORS); não estime o total.
  */
 export function lerPaginacao(
   headers: { get(nome: string): string | null },

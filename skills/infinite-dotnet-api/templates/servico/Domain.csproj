@@ -6,11 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!-- Infinite.Core.Postgres traz EF Core, Npgsql (+ plugin NodaTime) e NodaTime: não referencie direto. -->
   <ItemGroup>
     <PackageReference Include="Infinite.Core.Postgres" Version="{{versao}}" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="{{versaoEfCore}}" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="{{versaoNpgsqlEfCore}}" />
-    <PackageReference Include="NodaTime" Version="{{versaoNodaTime}}" />
     <PackageReference Include="Riok.Mapperly" Version="{{versao}}" />
     <PackageReference Include="FluentValidation" Version="{{versao}}" />
     <!-- Só quando houver cliente HTTP externo: -->

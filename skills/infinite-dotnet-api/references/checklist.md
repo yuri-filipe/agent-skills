@@ -70,6 +70,18 @@ Configuração:
 - [ ] Novas opções em classe `sealed` (`SectionName` ou opção tipada da lib Consul), registrada uma vez
 - [ ] Usings da WebHost em `...Extensoes.*` (os antigos `...Extensions.*` não existem)
 
+Pacotes:
+
+- [ ] Nenhum `Microsoft.EntityFrameworkCore*`, `Npgsql*` ou `NodaTime` referenciado direto na API ou
+      no Domain — vêm da `Infinite.Core.Postgres`
+- [ ] Nenhum `NodaTime.Serialization.SystemTextJson` ou `Swashbuckle.AspNetCore` na API — vêm da WebHost
+
+Logs:
+
+- [ ] `src/.editorconfig` presente (CA1848, CA2254, CA1727 como `error`)
+- [ ] Todo log novo segue o skill `infinite-api-logs`: método `[LoggerMessage]` com EventId em
+      `{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs`; handler/service só chama `_logger.{Fato}(...)`
+
 Build:
 
 - [ ] `dotnet build src/Infinite.{{Servico}}.slnx` limpo

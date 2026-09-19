@@ -72,14 +72,13 @@ A resposta é **só o array de itens**. A paginação vem nos headers:
 | `X-Page-Size` | tamanho efetivo |
 | `X-Total-Pages` | total de páginas |
 
-**Atenção ao CORS:** a política CORS da lib não expõe esses headers. Em chamada cross-origin
-(front e API em domínios diferentes) o navegador **não os entrega ao JS**: o header aparece no
-DevTools, mas vem `null` no código. Antes de depender deles:
+A WebHost expõe esses headers no CORS (`Access-Control-Expose-Headers`), então o JS os lê
+também quando front e API estão em domínios diferentes. Se o header vier `null` no código mas
+aparecer no DevTools, a API usa uma versão da `Infinite.Core.WebHost` anterior a essa correção:
 
-- se front e API estão na mesma origem (mesmo domínio via gateway), funciona;
-- se não, **não invente o total** a partir do tamanho do array como se fosse o total real. Informe
-  que a API precisa expor os headers (`Access-Control-Expose-Headers`) e, até lá, use navegação
-  "próxima página" (tem próxima se `items.length === pageSize`).
+- **não invente o total** a partir do tamanho do array como se fosse o total real;
+- informe que a API precisa atualizar a `Infinite.Core.WebHost`;
+- até lá, use navegação "próxima página" (tem próxima se `items.length === pageSize`).
 
 ## Erros
 
@@ -152,7 +151,7 @@ conforme o tipo do command. Não envie `""` onde o backend espera número ou dat
 3. Adapte `templates/api-contract.ts` ao cliente do projeto: tipos de erro, `lerErroApi` e
    `lerPaginacao`. Coloque-o junto dos utilitários de API já existentes.
 4. Tipos TypeScript dos DTOs espelham os DTOs do backend em camelCase; datas como `string`.
-5. Listagens: parâmetros de query + headers de paginação (verifique o caso CORS acima).
+5. Listagens: parâmetros de query + headers de paginação (com o fallback para header ausente).
 6. Formulários: mapeie 422 para os campos, 400 de negócio para aviso geral, e trate 400 de
    contrato como bug.
 7. Rode o type-check/build do projeto e relate o que foi verificado.
@@ -161,7 +160,7 @@ conforme o tipo do command. Não envie `""` onde o backend espera número ou dat
 
 - [ ] Um único cliente HTTP, com Bearer no interceptor e sem `withCredentials`
 - [ ] Payload de `POST`/`PUT` com exatamente os campos do command
-- [ ] Listagem lê a paginação dos headers, com o caso CORS verificado
+- [ ] Listagem lê a paginação dos headers e trata header ausente (API com WebHost antiga) sem inventar total
 - [ ] `sortField` com nome de propriedade da entidade; `pageSize` ≤ 200
 - [ ] 422 mapeado para campos sem diferenciar maiúsculas; erro sem campo aparece no formulário
 - [ ] 401 renova uma vez e depois vai ao login; 403 mostra acesso negado
