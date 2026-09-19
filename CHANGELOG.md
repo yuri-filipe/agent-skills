@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Skills alinhadas ao código atual das libs `Infinite.Core`, `.Postgres`, `.WebHost` e `.Consul`:
+  - `infinite-dotnet-api`: namespaces `Extensoes`, JSON NodaTime já registrado pela WebHost,
+    Consul descartando `appsettings`, design-time lendo Consul, `consul-config.json` de exemplo,
+    auditoria com organização, novos métodos de repositório e contrato HTTP (422/400/headers de paginação).
+  - `infinite-api-logs`: exceções de handler são registradas pelo `ErrorHandlingBehavior`.
+  - `infinite-auth-zitadel`: auditoria automática e `IAuditContextAccessor`.
+  - `infinite-frontend-datetime`: regras do JSON estrito da API.
 - `infinite-dotnet-api`: contrato de datas e fusos com NodaTime (`references/datas-e-fusos.md`), JSON ISO-8601 UTC e templates ajustados.
 - Nova skill `infinite-frontend-datetime` para datas e fusos nos frontends.
 - `infinite-angular-build` e `frontend-remote-config` apontam para a nova skill de datas.

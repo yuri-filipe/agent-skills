@@ -17,8 +17,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="{{versao}}" />
     <PackageReference Include="Npgsql" Version="{{versaoNpgsql}}" />
-    <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="{{versaoNodaTimeJson}}" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="{{versao}}" />
     <!-- Só quando houver integração HTTP externa: -->
     <!-- <PackageReference Include="Refit.HttpClientFactory" Version="{{versao}}" /> -->
   </ItemGroup>

@@ -1,0 +1,31 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "Cors": {
+    "AllowedOrigins": [ "https://{{dominio-frontend}}" ]
+  },
+  "PostgresConfig": {
+    "Host": "{{ postgres_host }}",
+    "Database": "{{database}}",
+    "Username": "{{ postgres_user }}",
+    "Password": "{{ postgres_password }}",
+    "EnableRetryOnFailure": 3,
+    "MigrationsHistoryTable": "__EFMigrationsHistory",
+    "MigrationsSchema": "migrations"
+  },
+  "LicenseKeyMediatr": "{{ mediatr_license_key }}",
+  "Autenticacao": {
+    "Habilitada": false
+  },
+  "Observabilidade": {
+    "Habilitada": true,
+    "Endpoint": "http://openobserve:5080/api/default",
+    "TokenAutenticacao": "Basic {{ openobserve_token }}",
+    "Ambiente": "qa",
+    "NomeServico": "api-{{servico}}"
+  }
+}

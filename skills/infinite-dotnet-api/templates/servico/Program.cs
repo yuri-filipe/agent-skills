@@ -1,6 +1,6 @@
 using Infinite.{{Servico}};
 using Infinite.Core.Consul;
-using Infinite.Core.WebHost.Extensions.Controllers;
+using Infinite.Core.WebHost.Extensoes.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 

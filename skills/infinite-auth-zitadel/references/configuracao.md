@@ -79,6 +79,9 @@ Se a API tem `ClientIdSwagger` configurado e o Swagger "sumiu" em qa, é esta ch
   - `Autenticacao:IdProjeto não configurado. Sem ele, roles de outros projetos do Zitadel seriam aceitas nesta API.`
   - `Autenticacao:Audiencias não configuradas.` / `... está vazio.`
   - `Autenticacao:AlgoritmosAceitos está vazio.`
+  - `Autenticacao:ToleranciaRelogioSegundos não pode ser negativa.` / `Autenticacao:ClaimDeNome não pode ser vazia.`
+  - `Autenticacao:OrganizacoesPermitidas está vazio.`
+  - `Autenticacao:PoliticasPorRole contém uma política sem nome.`
   - `Autenticacao:PoliticasPorRole a política 'Admin' está sem valores.`
   - `Autenticacao: a política 'X' está declarada em PoliticasPorRole e PoliticasPorEscopo.`
   - `Autenticacao:EscoposSwagger é obrigatório quando ClientIdSwagger está configurado.`
@@ -115,6 +118,15 @@ Se a API tem `ClientIdSwagger` configurado e o Swagger "sumiu" em qa, é esta ch
 | `User.PossuiAlgumaRole("admin", "gestor")` | `bool` — ao menos uma |
 | `User.PossuiRoleNaOrganizacao(idOrg, "admin")` | `bool` — role no contexto da organização |
 | `User.PossuiRoleNaOrganizacao(idOrg, "admin", "gestor")` | `bool` — ao menos uma, na organização |
+
+## `IAuditContextAccessor` (auditoria)
+
+`AddInfiniteAuth` registra `IHttpContextAccessor` e `IAuditContextAccessor` (`Infinite.Core.Auditing`)
+como singleton, **mesmo com `Habilitada: false`**. `GetCurrent()` lê a requisição no momento da
+chamada e devolve `AuditContext` (`IsAuthenticated`, `UserId` = `sub`, `UserName` = `ClaimDeNome`,
+`Email`, `OrganizationId` = `urn:zitadel:iam:org:id`) ou `AuditContext.Empty` sem identidade.
+O `InfiniteContext` da `Infinite.Core.Postgres` usa esse contrato para gravar usuário e
+organização na auditoria de toda `CoreEntity`; a organização nunca é inferida das roles.
 
 ## `PoliticaAutorizacaoExtensions`
 

@@ -35,7 +35,8 @@ middleware de log, dashboards, métricas, spans. Nada de `Console.WriteLine`, `D
 6. **Exceção vai como primeiro argumento**: `logger.LogError(excecao, "...")`. Nunca
    `LogError(excecao.Message)` — perde stack trace e tipo.
 7. **Não relogue exceção que vai subir.** Se o `catch` faz rethrow (ou não existe), quem loga é o
-   `Send` do `InfiniteApiController`. Logar e relançar gera a mesma falha duas vezes no OpenObserve.
+   `ErrorHandlingBehavior` do pipeline MediatR (e o `Send`, para o que escapar dele). Logar e
+   relançar gera a mesma falha duas vezes no OpenObserve.
 8. **Mensagem em português, impessoal, terminando em ponto**, descrevendo o fato — sem "Erro:",
    sem "ATENÇÃO", sem emoji, sem `{0}`.
 9. **Não invente identificador**: use os ids que já existem no escopo (`request.Id`, `entidade.Id`,
@@ -48,7 +49,8 @@ middleware de log, dashboards, métricas, spans. Nada de `Console.WriteLine`, `D
 | Já coberto | Por quem |
 |---|---|
 | Requisição recebida: rota, método, status, duração | Instrumentação AspNetCore (métrica + trace) |
-| Exceção não tratada que sobe do handler (com `TraceId`) | `InfiniteApiController.Send` → `LogError` |
+| Exceção não tratada que sobe do handler — ela e cada `InnerException` | `ErrorHandlingBehavior` (`AddInfiniteCqrs`) → `LogError` "Exceção capturada: {Mensagem}", e a resposta vira 500 |
+| Exceção que escapa do pipeline MediatR (com `TraceId`, EventId 3001) | `InfiniteApiController.Send` → `LogError` |
 | Request cancelada pelo cliente (499) | `InfiniteApiController.Send` → `LogInformation` |
 | Erro de validação do FluentValidation (422) | `Send` devolve o corpo; **não é log** |
 | Query, `SaveChanges`, conexão de banco | Trace do EF Core / Npgsql |

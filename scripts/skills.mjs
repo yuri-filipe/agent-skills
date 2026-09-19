@@ -19,6 +19,8 @@ export function files(root) {
     for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
       const full = path.join(directory, entry.name);
       if (entry.isSymbolicLink()) throw new Error(`Link não permitido: ${full}`);
+      // Build output an IDE may restore next to the .csproj templates.
+      if (entry.isDirectory() && ['bin', 'obj'].includes(entry.name)) continue;
       if (entry.isDirectory()) walk(full);
       else if (entry.isFile()) result[path.relative(root, full).split(path.sep).join('/')] = fs.readFileSync(full);
       else throw new Error(`Tipo de arquivo não suportado: ${full}`);

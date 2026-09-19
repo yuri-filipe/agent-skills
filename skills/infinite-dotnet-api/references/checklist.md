@@ -30,9 +30,11 @@ Handler:
 - [ ] Mensagens em `private const string ...Message`
 - [ ] `IReadRepository` em query; `IWriteRepository` em mutação
 - [ ] `CancellationToken` propagado em toda chamada async
-- [ ] Retorna `Success/NotFound/Invalid/Error` — sem `throw` para fluxo esperado
+- [ ] Retorna `Success/NotFound/Invalid/Forbidden/Error` — sem `throw` para fluxo esperado
+- [ ] Sem `try/catch` só para devolver 500 (o `ErrorHandlingBehavior` já faz)
 - [ ] Sem validação de entrada manual (é do pipeline) e sem mapeamento manual (é do Mapperly)
 - [ ] Listagem usa `PaginatedAsync` com argumentos nomeados e predicate do `Filters`
+- [ ] Se a listagem aceita busca livre, o filtro trata `request.HasSearch` (a lib não aplica `Search`)
 
 Dto / Mapper / Validator / Filter:
 
@@ -45,7 +47,7 @@ Dto / Mapper / Validator / Filter:
 
 Persistência:
 
-- [ ] Entidade herda `CoreEntity` e não redeclara `Id`
+- [ ] Entidade herda `CoreEntity` e não redeclara `Id` nem campos de auditoria/organização
 - [ ] Mapping herda `CoreTableMapping<T>` com `("{{tabela}}", "{{schema}}")` em snake_case
 - [ ] `ConfigureAdditionalProperties` só com o que foge do default
 - [ ] FK entre módulos opcional quando fizer sentido, com `DeleteBehavior.Restrict`
@@ -55,7 +57,7 @@ Datas e contrato com o frontend (quando houver campos temporais):
 
 - [ ] Instantes em `Instant`/`Instant?`; datas/horas civis nos tipos NodaTime correspondentes
 - [ ] Auditoria herdada de `CoreEntity`, sem preenchimento ou conversão de fuso no handler
-- [ ] JSON NodaTime registrado na API; instantes em UTC com `Z`, civis sem fuso inventado
+- [ ] JSON só via `AddInfiniteApiController` (sem `ConfigureForNodaTime` duplicado); instantes em UTC com `Z`, civis sem fuso inventado
 - [ ] Entrada civil acompanhada de fuso IANA quando virar instante; política de ambiguidade explícita
 - [ ] DTOs, Mapperly, filtros e OpenAPI compatíveis com o formato JSON real
 - [ ] Runtime e design-time usam a mesma configuração Npgsql/NodaTime
@@ -64,7 +66,9 @@ Datas e contrato com o frontend (quando houver campos temporais):
 Configuração:
 
 - [ ] Nenhum segredo/connection string/token commitado (vem do Consul / variável de ambiente)
-- [ ] Novas opções em classe `sealed` com `SectionName`, registrada no `Startup`
+- [ ] Nada de que a API dependa em `appsettings*.json` — o Consul descarta essas fontes em runtime
+- [ ] Novas opções em classe `sealed` (`SectionName` ou opção tipada da lib Consul), registrada uma vez
+- [ ] Usings da WebHost em `...Extensoes.*` (os antigos `...Extensions.*` não existem)
 
 Build:
 

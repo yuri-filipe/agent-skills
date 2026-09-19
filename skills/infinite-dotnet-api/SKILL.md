@@ -36,8 +36,10 @@ Ao aplicar, substitua:
    Solution `.slnx` em `src/`.
 3. **Controller nunca acessa repositório, DbContext ou service** — só `Send(command|query)`.
 4. **Handler nunca valida manualmente entrada** — validação é FluentValidation resolvida pelo
-   pipeline do `AddInfiniteCqrs`. Handler valida apenas *estado* (existe? já processado?).
-5. **Handler nunca lança exceção para fluxo esperado** — retorna `response.NotFound/Invalid/Error`.
+   pipeline do `AddInfiniteCqrs` (falha vira 422). Handler valida apenas *estado* (existe? já processado?).
+5. **Handler nunca lança exceção para fluxo esperado** — retorna `response.NotFound/Invalid/Forbidden/Error`.
+   Exceção inesperada é capturada pelo `ErrorHandlingBehavior` (log + 500); não envolva o handler
+   em `try/catch` só para isso.
 6. **Query usa `IReadRepository<T>`; command usa `IWriteRepository<T>`** (update/delete podem usar
    os dois: ler para localizar, escrever para persistir).
 7. **Tudo assíncrono com `CancellationToken`** propagado até o repositório.
@@ -150,8 +152,10 @@ Ver `templates/` para os arquivos completos e `references/` para detalhes.
 ao criar um serviço ou alterar campos temporais, DTOs, filtros, JSON ou mappings. O padrão é
 `Instant` para instantes, transporte ISO-8601 UTC com `Z` e fuso escolhido na aplicação/frontend.
 `LocalDate`, `LocalTime` e `LocalDateTime` representam valores civis, sem conversão implícita de fuso.
-Verifique a versão real de `Infinite.Core.Postgres`: alterações locais na lib não comprovam que
-o pacote com `CoreEntity.DataInclusao/DataAlteracao` em `Instant?` já foi publicado no feed.
+O JSON (NodaTime e regras estritas) já é configurado por `AddInfiniteApiController`; não registre de novo.
+
+**Configuração** → tudo vem do Consul: `AddConsulConfig` descarta `appsettings*.json` em runtime.
+Seções mínimas em `templates/servico/consul-config.json`.
 
 **Novo serviço** → siga `references/novo-servico.md` e copie `templates/servico/`.
 
@@ -171,12 +175,12 @@ Nada mais precisa ser registrado: handlers e validators são varridos por assemb
 - [references/datas-e-fusos.md](references/datas-e-fusos.md) — NodaTime, JSON UTC, entrada civil
   com fuso IANA, auditoria e compatibilidade com consumidores existentes.
 
-- `references/libs-infinite.md` — superfície das libs `Infinite.Core.*` (Response, repositórios,
-  paginação, entidade e mapping base, extensões de host).
+- `references/libs-infinite.md` — superfície das libs `Infinite.Core.*` (Response e contrato HTTP,
+  repositórios, paginação, auditoria, entidade e mapping base, JSON, Consul).
 - `references/novo-servico.md` — bootstrap de um serviço do zero, config (Consul), pipeline, EF.
 - `references/checklist.md` — checklist de revisão/PR.
 - `templates/servico/` — Program, Startup, csproj, slnx, nuget.config, appsettings, launchSettings,
-  context factory, pipeline.
+  context factory (lendo Consul), pipeline e `consul-config.json` com as seções mínimas.
 - `templates/modulo/` — CRUD completo com placeholders (Commands, CommandHandlers, Queries,
   QueryHandlers, Dtos, Mappers, Validators, Filters, Models, Mapping EF, Controller).
 - `templates/comum/` — bases compartilhadas (`ObterPorIdBaseQuery`, `DeletarBaseCommand`,

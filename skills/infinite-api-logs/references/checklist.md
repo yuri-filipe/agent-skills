@@ -10,7 +10,7 @@
       concatenação ou `{0}`.
 - [ ] Placeholders em PascalCase, e o **mesmo dado usa o mesmo nome** em todos os arquivos tocados.
 - [ ] `LogError`/`LogWarning` com exceção passam a exceção como **primeiro argumento**.
-- [ ] Nenhum `catch` loga e faz `throw;` (duplicaria o log do `Send`).
+- [ ] Nenhum `catch` loga e faz `throw;` (duplicaria o log do `ErrorHandlingBehavior`).
 - [ ] Nenhum log contém senha, token, header `Authorization`, CPF/CNPJ, e-mail, telefone, endereço,
       dado de cartão, corpo de request ou entidade serializada.
 - [ ] Nenhum `LogTrace`/`LogDebug` sobrou; nenhum `Console.WriteLine`/`Debug.WriteLine` foi

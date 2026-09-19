@@ -8,8 +8,8 @@
 
 Este é o padrão para novos serviços e alterações temporais autorizadas. Em um serviço existente,
 inspecione versões, contratos e consumidores antes de trocar tipos públicos; não migre toda a API
-como efeito colateral de um CRUD sem relação com datas. Confirme o contrato do pacote efetivamente
-instalado: a alteração local da lib não comprova que uma nova versão foi publicada no feed.
+como efeito colateral de um CRUD sem relação com datas. Confirme que o serviço referencia uma
+versão das libs com NodaTime (a mudança de `DateTime?` para `Instant?` na auditoria é breaking).
 
 ## Tipos e persistência
 
@@ -25,9 +25,9 @@ quando o negócio precisa dele, persista `TimeZoneId` IANA em outra propriedade 
 Use o plugin nativo do Npgsql, sem conversores EF paralelos para os mesmos tipos. Runtime e
 design-time devem passar pelo configurador compartilhado da lib.
 
-Na versão com NodaTime, `CoreEntity` tem `Id`, `Excluido`, `UsuarioInclusao`, `UsuarioAlteracao`,
-`DataInclusao` e `DataAlteracao`; as duas datas são `Instant?`. O contexto gera a auditoria,
-com um instante por salvamento. DTOs devem refletir esses tipos quando o contrato permitir.
+`CoreEntity` tem `Id`, `Excluido`, `UsuarioInclusao`, `UsuarioAlteracao`, `DataInclusao`,
+`DataAlteracao`, `OrganizacaoInclusao` e `OrganizacaoAlteracao`; as duas datas são `Instant?`.
+O contexto gera a auditoria com `SystemClock`, um instante por salvamento. DTOs devem refletir esses tipos quando o contrato permitir.
 `AutoProject` copia tipos compatíveis; não converte `Instant` para `DateTime` automaticamente.
 Configure conversões necessárias explicitamente no Mapperly e teste o contrato resultante.
 
@@ -37,19 +37,10 @@ Tipos .NET legados continuam aceitos: para `timestamptz`, `DateTime.Kind` deve s
 
 ## JSON na API
 
-Referencie `NodaTime.Serialization.SystemTextJson` no projeto Web API, com versão estável
-compatível com NodaTime. Depois de `AddInfiniteApiController`, registre:
-
-```csharp
-using NodaTime;
-using NodaTime.Serialization.SystemTextJson;
-
-services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
-    options.JsonSerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb));
-```
-
-Para Minimal APIs, configure `ConfigureHttpJsonOptions`/`SerializerOptions` correspondentes.
-Não adicione registro JSON à lib Postgres, nem presuma que opções MVC configuram Minimal APIs.
+`AddInfiniteApiController` (Infinite.Core.WebHost) já configura o serializador de controllers e
+Minimal APIs com `ConfigureForNodaTime(DateTimeZoneProviders.Tzdb)`. Não referencie
+`NodaTime.Serialization.SystemTextJson` na API nem registre o conversor de novo; ajuste extra vai
+no parâmetro `configurarJson` de `AddInfiniteApiController`.
 
 | Tipo | Exemplo JSON |
 |---|---|
@@ -58,10 +49,17 @@ Não adicione registro JSON à lib Postgres, nem presuma que opções MVC config
 | `LocalTime` | `"14:00:00"` |
 | `LocalDateTime` | `"2026-09-20T14:00:00"` |
 
-Não use formato localizado como contrato HTTP. Configure o OpenAPI para refletir strings e
-formatos reais, sem expor as propriedades internas das structs NodaTime. `Instant` usa `date-time`,
-`LocalDate` usa `date`; para tipos civis de hora/data-hora mantenha exemplos sem offset e não
-prometa um instante RFC 3339. Confira o documento gerado pela versão do gerador instalada.
+Regras da lib que afetam contratos temporais:
+
+- `DateTime`/`DateTimeOffset` legados só aceitam string com `Z` ou offset; sem fuso a
+  requisição falha na desserialização com mensagem orientando usar UTC ou um tipo civil.
+  `DateTime` lido é convertido para UTC.
+- Propriedade desconhecida no corpo é erro. Renomear um campo temporal quebra clientes que
+  ainda enviam o nome antigo.
+
+Não use formato localizado como contrato HTTP. O Swagger da lib já descreve os tipos NodaTime
+como string: `Instant`/`OffsetDateTime` com `date-time`, `LocalDate` com `date`, e os civis de
+hora/data-hora sem `format`, com exemplo sem offset.
 
 ## Entrada civil e conversão
 

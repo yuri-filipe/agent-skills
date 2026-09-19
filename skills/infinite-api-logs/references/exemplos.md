@@ -28,7 +28,7 @@ public sealed class AdicionarAgendamentoCommandHandler
 ```
 
 **Não injete `ILogger` aqui.** Sucesso está na métrica, o insert está no trace do EF, e uma exceção
-sobe para o `Send`, que já loga com `TraceId`. Um `LogInformation("Agendamento adicionado.")` seria a
+sobe para o `ErrorHandlingBehavior`, que já a loga e responde 500. Um `LogInformation("Agendamento adicionado.")` seria a
 quarta cópia do mesmo fato.
 
 ---
@@ -137,7 +137,7 @@ catch (Exception)
 }
 ```
 
-A exceção morre ali: nem o `Send` a vê, nem o OpenObserve.
+A exceção morre ali: nem o `ErrorHandlingBehavior` a vê, nem o OpenObserve.
 
 ### Depois
 
@@ -154,8 +154,8 @@ catch (DbUpdateException excecao)
 }
 ```
 
-Se em vez de `response.Error` o `catch` fizesse `throw;`, **não haveria log aqui** — o `Send` do
-`InfiniteApiController` já registra a exceção com `TraceId`.
+Se em vez de `response.Error` o `catch` fizesse `throw;`, **não haveria log aqui** — o
+`ErrorHandlingBehavior` do pipeline MediatR já registra a exceção (e as internas) e devolve 500.
 
 ---
 
@@ -209,7 +209,7 @@ public sealed class ServicoFaturamento
 
 ## 6. `BackgroundService` / job / consumer
 
-Fora do pipeline HTTP não existe trace, métrica de request nem o `catch` do `Send`. É o único lugar
+Fora do pipeline HTTP não existe trace, métrica de request nem o `catch` do `ErrorHandlingBehavior`/`Send`. É o único lugar
 onde início e fim de ciclo valem `Information`.
 
 ```csharp

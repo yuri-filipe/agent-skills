@@ -177,8 +177,21 @@ if (User.PossuiAlgumaRole("admin", "gestor")) { }
 if (User.PossuiRoleNaOrganizacao(idOrg!, "admin")) { }
 ```
 
-Para passar o usuário ao domínio, injete `IHttpContextAccessor` (já registrado quando auth está
-ligada) — **não** repasse `ClaimsPrincipal` como parâmetro de command/query vindo do body.
+**Auditoria já é automática**: toda entidade `CoreEntity` grava `UsuarioInclusao/Alteracao` (`sub`)
+e `OrganizacaoInclusao/Alteracao` (`urn:zitadel:iam:org:id`) no `SaveChanges`. Não preencha
+esses campos nem crie middleware para isso.
+
+Para usar o usuário no domínio (handler, service), injete `IAuditContextAccessor`
+(`Infinite.Core.Auditing`, registrado pela lib mesmo com auth desligada):
+
+```csharp
+var atual = auditContextAccessor.GetCurrent();
+// IsAuthenticated, UserId (sub), UserName (ClaimDeNome), Email, OrganizationId
+```
+
+Sem identidade autenticada ele devolve `AuditContext.Empty`. `IHttpContextAccessor` também é
+registrado sempre, mas o Domain não deve depender de ASP.NET. **Não** repasse `ClaimsPrincipal`
+nem id de usuário como parâmetro de command/query vindo do body.
 
 ### 6. Verificar e entregar
 

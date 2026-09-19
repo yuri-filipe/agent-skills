@@ -83,6 +83,19 @@ Na edição, preencha o campo civil a partir do instante no fuso correspondente;
 original ao salvar sem alteração, inclusive suas frações. Datas de nascimento e horas de
 funcionamento permanecem civis; não recebem uma conversão UTC automática.
 
+### O que a API recusa
+
+As APIs com `Infinite.Core.WebHost` usam JSON estrito. Um envio fora do contrato não é corrigido
+pelo servidor; ele falha:
+
+- Campo legado `DateTime`/`DateTimeOffset` sem fuso (`"2026-09-20T14:00:00"`) é rejeitado. Envie o
+  instante em UTC com `Z` ou com offset; valores civis vão nos campos civis do contrato.
+- Propriedade que não existe no DTO do backend é rejeitada. Não envie campos auxiliares de UI
+  (`dataFormatada`, `fusoLabel`) nem o objeto recebido inteiro de volta sem filtrar pelo contrato
+  do endpoint.
+- Validação de campo volta **422** com `errors: [{ field, message }]`; regra de negócio volta **400**
+  com `{ title, message }`. Mostre a mensagem do campo no próprio campo temporal quando existir.
+
 Em horários repetidos ou inexistentes por transições, apresente a validação retornada pela API.
 A política estrita ou leniente pertence à aplicação; não implemente uma resolução diferente
 no navegador. Filtros por dia mantêm o dia e o fuso relevantes, conforme o contrato,
