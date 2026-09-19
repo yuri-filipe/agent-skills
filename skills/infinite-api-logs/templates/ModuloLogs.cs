@@ -1,8 +1,8 @@
-// Destino: Infinite.{{Servico}}.Domain/{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs
+// Destino: Infinite.{{Servico}}.Domain/{{Modulo}}/Common/Observabilidade/{{Modulo}}Logs.cs
 // Uma classe por módulo. Handlers, services e workers só chamam: _logger.{Fato}(...).
 using Microsoft.Extensions.Logging;
 
-namespace Infinite.{{Servico}}.Domain.{{Modulo}}.Common.Logs;
+namespace Infinite.{{Servico}}.Domain.{{Modulo}}.Common.Observabilidade;
 
 /// <summary>
 /// Logs do módulo {{Modulo}}, gerados em tempo de compilação (<see cref="LoggerMessageAttribute"/>).

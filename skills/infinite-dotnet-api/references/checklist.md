@@ -80,7 +80,7 @@ Logs:
 
 - [ ] `src/.editorconfig` presente (CA1848, CA2254, CA1727 como `error`)
 - [ ] Todo log novo segue o skill `infinite-api-logs`: método `[LoggerMessage]` com EventId em
-      `{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs`; handler/service só chama `_logger.{Fato}(...)`
+      `{{Modulo}}/Common/Observabilidade/{{Modulo}}Logs.cs`; handler/service só chama `_logger.{Fato}(...)`
 
 Build:
 

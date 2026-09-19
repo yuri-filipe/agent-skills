@@ -18,7 +18,7 @@ estruturado, exceção pela sobrecarga própria e nível configurado por categor
 
 ## Escopo
 
-**Faz**: mantém a classe de logs do módulo (`Common/Logs`), declara nela os métodos `[LoggerMessage]`, injeta `ILogger<T>`, chama os métodos nos pontos certos,
+**Faz**: mantém a classe de logs do módulo (`Common/Observabilidade`), declara nela os métodos `[LoggerMessage]`, injeta `ILogger<T>`, chama os métodos nos pontos certos,
 corrige nível e mensagem, converte chamadas `Log*` antigas, remove log ruidoso ou perigoso e mantém o
 `.editorconfig` que obriga o padrão.
 
@@ -34,11 +34,14 @@ exceção para "ter o que logar". `Logging:LogLevel` só quando a tarefa pedir (
    `LogTrace/LogDebug/LogInformation/LogWarning/LogError/LogCritical` ou `Log(LogLevel, ...)`
    diretamente. O build recusa (CA1848).
 2. **Os métodos ficam numa classe de logs separada, uma por módulo**:
-   `{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs` no projeto Domain — `internal static partial class`
+   `{{Modulo}}/Common/Observabilidade/{{Modulo}}Logs.cs` no projeto Domain — `internal static partial class`
    com métodos de extensão `public static partial void {Fato}(this ILogger logger, ...)`.
    Handlers, services, workers e demais classes **só chamam** `_logger.{Fato}(...)`; nenhum
    `[LoggerMessage]`, template ou nível fica espalhado no código de negócio. Template em
    `templates/ModuloLogs.cs`.
+   **Nunca** use pasta chamada `Log` ou `Logs`: o `.gitignore` padrão do Visual Studio ignora
+   `[Ll]og/` e `[Ll]ogs/`, e o arquivo some do commit sem aviso (o build local passa, o da
+   pipeline quebra). `Observabilidade` é o mesmo nome usado pela WebHost (`Observabilidade/MensagensLog.cs`).
 3. **Categoria = a classe que registra**: injete `ILogger<PropriaClasse>` pelo primary constructor
    (último parâmetro) com campo `private readonly`. A classe de logs recebe esse logger e não
    muda a categoria. Nunca `ILoggerFactory.CreateLogger("texto")` em código de aplicação.
@@ -59,8 +62,8 @@ exceção para "ter o que logar". `Logging:LogLevel` só quando a tarefa pedir (
    A sobrecarga com template também é barrada pelo CA1848.
 
 ```csharp
-// Infinite.Agendamentos.Domain/Comercial/Common/Logs/ComercialLogs.cs
-namespace Infinite.Agendamentos.Domain.Comercial.Common.Logs;
+// Infinite.Agendamentos.Domain/Comercial/Common/Observabilidade/ComercialLogs.cs
+namespace Infinite.Agendamentos.Domain.Comercial.Common.Observabilidade;
 
 /// <summary>Logs do módulo Comercial. Bloco de EventIds: 10000–10999.</summary>
 internal static partial class ComercialLogs
@@ -73,7 +76,7 @@ internal static partial class ComercialLogs
 
 ```csharp
 // No handler: só a chamada.
-using Infinite.Agendamentos.Domain.Comercial.Common.Logs;
+using Infinite.Agendamentos.Domain.Comercial.Common.Observabilidade;
 
 public sealed class CancelarAgendamentoCommandHandler
 (
@@ -205,7 +208,7 @@ aplicação. Tabela de decisão completa em `references/niveis.md`.
 4. **Apresente a lista antes de editar** — arquivo, EventId, nível, método e mensagem —, e só aplique
    depois do aceite. Em revisão, liste também o que vai **sair** e o que vai ser **convertido**.
 5. **Aplique**: métodos `[LoggerMessage]` na classe `{{Modulo}}Logs` do módulo (crie
-   `{{Modulo}}/Common/Logs/` a partir de `templates/ModuloLogs.cs` se não existir), `ILogger<T>`
+   `{{Modulo}}/Common/Observabilidade/` a partir de `templates/ModuloLogs.cs` se não existir), `ILogger<T>`
    no construtor da classe que registra e só a chamada `_logger.{Fato}(...)` no ponto escolhido.
 6. **Garanta o `src/.editorconfig`** (seção "Imposição no build").
 7. **Compile**: `dotnet build src/Infinite.{{Servico}}.slnx` — sem CA1848/CA2254/CA1727 — e confira
@@ -223,4 +226,4 @@ aplicação. Tabela de decisão completa em `references/niveis.md`.
   externa, `BackgroundService` e controller, todos em `[LoggerMessage]`.
 - `references/checklist.md` — revisão de PR e critérios para **remover** log existente.
 - `templates/editorconfig` — regras de analisador que tornam o padrão obrigatório.
-- `templates/ModuloLogs.cs` — classe de logs do módulo (`{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs`).
+- `templates/ModuloLogs.cs` — classe de logs do módulo (`{{Modulo}}/Common/Observabilidade/{{Modulo}}Logs.cs`).

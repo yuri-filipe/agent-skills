@@ -6,12 +6,14 @@
       estado?". Nenhuma é narração de progresso.
 - [ ] Nenhum ponto da tabela "O que a plataforma já loga" foi duplicado.
 - [ ] Nenhum arquivo passou de **3** chamadas de log; handlers de CRUD simples ficaram com **zero**.
-- [ ] Todo log é um método `[LoggerMessage]` na classe `{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs`;
+- [ ] Todo log é um método `[LoggerMessage]` na classe `{{Modulo}}/Common/Observabilidade/{{Modulo}}Logs.cs`;
       handlers/services/workers só chamam `_logger.{Fato}(...)` — nenhum `[LoggerMessage]`,
       `Log*` ou `Log(LogLevel, ...)` no código de negócio.
 - [ ] Cada método tem `EventId` novo, no bloco do módulo declarado no cabeçalho da classe de logs,
       sem reaproveitar nem renumerar; `grep -rhoE "EventId = [0-9]+" --include=*.cs src/ | sort | uniq -d`
       sai vazio.
+- [ ] A classe de logs aparece no `git status` (pasta `Observabilidade`, nunca `Log`/`Logs`, que o
+      `.gitignore` do Visual Studio ignora): `git check-ignore -v <arquivo>` não retorna nada.
 - [ ] Modelo de mensagem constante com placeholder nomeado — nenhuma interpolação `$"..."`,
       concatenação ou `{0}`.
 - [ ] Placeholders em PascalCase, e o **mesmo dado usa o mesmo nome** em todos os arquivos tocados.

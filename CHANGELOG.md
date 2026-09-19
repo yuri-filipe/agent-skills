@@ -3,12 +3,14 @@
 ## Unreleased
 
 - `infinite-api-logs`: padrão obrigatório da documentação .NET — métodos `[LoggerMessage]` gerados em
-  compilação numa classe por módulo (`{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs`), código de negócio
+  compilação numa classe por módulo (`{{Modulo}}/Common/Observabilidade/{{Modulo}}Logs.cs`), código de negócio
   só chama, EventId por bloco de módulo, `Logging:LogLevel` no Consul e `.editorconfig` com
   CA1848/CA2254/CA1727 como erro. Templates `editorconfig` e `ModuloLogs.cs`.
 - `infinite-dotnet-api`: EF Core, Design, Npgsql e NodaTime só pela `Infinite.Core.Postgres`
-  (removidos dos templates de API/Domain), `Common/Logs` no layout do módulo, `.editorconfig` e
+  (removidos dos templates de API/Domain), `Common/Observabilidade` no layout do módulo, `.editorconfig` e
   níveis de log do Consul no template.
+- Pasta da classe de logs do módulo renomeada para `Common/Observabilidade`: `Logs/` é ignorada
+  pelo `.gitignore` padrão do Visual Studio.
 - `infinite-frontend-api`: headers de paginação expostos pelo CORS da WebHost; fallback só para
   versões antigas.
 - Nova skill `infinite-frontend-api`: contrato HTTP das APIs Infinite para frontends (rotas,

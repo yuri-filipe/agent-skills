@@ -71,7 +71,7 @@ Ao aplicar, substitua:
         Queries/ObterPorIdBaseQuery.cs
       {{Modulo}}/
         Common/
-          Logs/{{Modulo}}Logs.cs               # logs [LoggerMessage] do módulo (quando houver log)
+          Observabilidade/{{Modulo}}Logs.cs    # logs [LoggerMessage] do módulo (quando houver log)
         {{Entidades}}/
           Commands/
           CommandHandlers/
@@ -99,9 +99,11 @@ Regras de pasta:
   compartilham as entidades, promova para `{{Modulo}}/Models/` — mas escolha **um** dos dois por
   módulo e mantenha.
 - `Filters/` contém só extension methods de predicate; `Enums/` só enums do módulo/entidade.
-- `{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs` concentra **todos** os métodos `[LoggerMessage]` do
+- `{{Modulo}}/Common/Observabilidade/{{Modulo}}Logs.cs` concentra **todos** os métodos `[LoggerMessage]` do
   módulo, com o bloco de EventIds no cabeçalho. Handlers e services só chamam
-  `_logger.{Fato}(...)`; nunca declaram log. Ver skill `infinite-api-logs`.
+  `_logger.{Fato}(...)`; nunca declaram log. Ver skill `infinite-api-logs`. **Não** nomeie a pasta
+  `Log`/`Logs`: o `.gitignore` padrão do Visual Studio ignora esses nomes e o arquivo não vai
+  para o commit.
 - `Services/` é para orquestração reutilizada por vários handlers ou integração externa (Refit).
   Não crie service para CRUD simples.
 
@@ -126,7 +128,7 @@ Regras de pasta:
 | Entidade | `{{Entidade}}.cs` | `Models` |
 | Mapping EF | `{{Entidade}}Mapping.cs` | `Infrastructure/Mappings/{{Modulo}}` |
 | Controller | `{{Entidades}}Controller.cs` | `Controllers/{{Modulo}}` |
-| Logs do módulo | `{{Modulo}}Logs.cs` | `{{Modulo}}/Common/Logs` |
+| Logs do módulo | `{{Modulo}}Logs.cs` | `{{Modulo}}/Common/Observabilidade` |
 
 Verbos padronizados em português: **Adicionar / Atualizar / Deletar / Pesquisar / Obter…PorId**.
 Não misture com Create/Update/Delete/Get/Search. Para ações fora do CRUD, use verbo de negócio no
@@ -164,7 +166,7 @@ O JSON (NodaTime e regras estritas) já é configurado por `AddInfiniteApiContro
 referencie esses pacotes na API nem no Domain. Swagger e serializador NodaTime vêm da WebHost.
 
 **Logs** → obrigatório o padrão do skill `infinite-api-logs`: métodos `[LoggerMessage]` gerados em
-compilação na classe `{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs` (template
+compilação na classe `{{Modulo}}/Common/Observabilidade/{{Modulo}}Logs.cs` (template
 `templates/comum/ModuloLogs.cs`), EventId por bloco de módulo, template constante. O código de
 negócio só chama o método. Imposto por `src/.editorconfig` (template `templates/servico/editorconfig`).
 

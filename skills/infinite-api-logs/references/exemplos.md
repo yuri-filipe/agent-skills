@@ -3,15 +3,15 @@
 Todos os trechos seguem o skill `infinite-dotnet-api` (primary constructor, campos
 `private readonly`, mensagens de resposta em `private const string`) e o padrão obrigatório de
 log: os métodos `[LoggerMessage]` ficam na classe de logs do módulo
-(`{{Modulo}}/Common/Logs/{{Modulo}}Logs.cs`) e o código de negócio **só chama** `_logger.{Fato}(...)`.
+(`{{Modulo}}/Common/Observabilidade/{{Modulo}}Logs.cs`) e o código de negócio **só chama** `_logger.{Fato}(...)`.
 
 Módulos dos exemplos: `Comercial` (bloco `10000–10999`) e `Financeiro` (bloco `11000–11999`).
 
 ## 0. Classes de logs dos módulos
 
 ```csharp
-// Infinite.Agendamentos.Domain/Comercial/Common/Logs/ComercialLogs.cs
-namespace Infinite.Agendamentos.Domain.Comercial.Common.Logs;
+// Infinite.Agendamentos.Domain/Comercial/Common/Observabilidade/ComercialLogs.cs
+namespace Infinite.Agendamentos.Domain.Comercial.Common.Observabilidade;
 
 /// <summary>Logs do módulo Comercial. Bloco de EventIds: 10000–10999.</summary>
 internal static partial class ComercialLogs
@@ -35,8 +35,8 @@ internal static partial class ComercialLogs
 ```
 
 ```csharp
-// Infinite.Agendamentos.Domain/Financeiro/Common/Logs/FinanceiroLogs.cs
-namespace Infinite.Agendamentos.Domain.Financeiro.Common.Logs;
+// Infinite.Agendamentos.Domain/Financeiro/Common/Observabilidade/FinanceiroLogs.cs
+namespace Infinite.Agendamentos.Domain.Financeiro.Common.Observabilidade;
 
 /// <summary>Logs do módulo Financeiro. Bloco de EventIds: 11000–11999.</summary>
 internal static partial class FinanceiroLogs
