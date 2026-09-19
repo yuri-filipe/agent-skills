@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Scripts de instalação, atualização, validação e empacotamento aceitam Windows PowerShell 5.1.
+- CI verifica os pontos de entrada também no Windows PowerShell, além do PowerShell 7.
+
 ## 1.0.0
 
 - Importação de cinco skills pessoais da Infinite com referências e templates.

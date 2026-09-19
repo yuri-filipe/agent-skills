@@ -13,7 +13,7 @@ referências e templates da Infinite. O conteúdo canônico vive em `skills/`.
 
 ## 1. Clonar e preparar
 
-Pré-requisitos: Git, Node.js 22 ou superior e PowerShell 7 para os comandos `.ps1`.
+Pré-requisitos: Git, Node.js 22 ou superior e Windows PowerShell 5.1 ou PowerShell 7+ para os comandos `.ps1`.
 Os comandos Node também funcionam em Linux/macOS.
 
 ```powershell

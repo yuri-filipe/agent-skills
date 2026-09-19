@@ -1,4 +1,4 @@
-#Requires -Version 7.0
+#Requires -Version 5.1
 [CmdletBinding()]
 param(
     [ValidateSet('All', 'Codex', 'ClaudeCode')][string[]]$Target = @('All'),
@@ -10,4 +10,4 @@ $selected = if ($Target -contains 'All' -or $Target.Count -gt 1) { 'all' } elsei
 $arguments = @((Join-Path $PSScriptRoot 'skills.mjs'), 'install', '--target', $selected, '--profile', $ProfileRoot)
 if ($AdoptExisting) { $arguments += '--adopt' }
 & node @arguments
-if ($LASTEXITCODE -ne 0) { throw 'Instalação não concluída. Consulte o erro acima.' }
+if ($LASTEXITCODE -ne 0) { throw 'Instalacao nao concluida. Consulte o erro acima.' }

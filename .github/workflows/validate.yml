@@ -26,3 +26,9 @@ jobs:
         run: |
           ./scripts/validate.ps1
           ./scripts/install.ps1 -Target All -ProfileRoot (Join-Path $env:RUNNER_TEMP 'skills-smoke')
+      - name: Validate Windows PowerShell 5.1 entry points
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          ./scripts/validate.ps1
+          ./scripts/install.ps1 -Target All -ProfileRoot (Join-Path $env:RUNNER_TEMP 'skills-smoke-ps51')
