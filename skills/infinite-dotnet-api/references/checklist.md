@@ -51,6 +51,16 @@ Persistência:
 - [ ] FK entre módulos opcional quando fizer sentido, com `DeleteBehavior.Restrict`
 - [ ] Migration gerada por `dotnet ef` após a mudança de entidade/mapping
 
+Datas e contrato com o frontend (quando houver campos temporais):
+
+- [ ] Instantes em `Instant`/`Instant?`; datas/horas civis nos tipos NodaTime correspondentes
+- [ ] Auditoria herdada de `CoreEntity`, sem preenchimento ou conversão de fuso no handler
+- [ ] JSON NodaTime registrado na API; instantes em UTC com `Z`, civis sem fuso inventado
+- [ ] Entrada civil acompanhada de fuso IANA quando virar instante; política de ambiguidade explícita
+- [ ] DTOs, Mapperly, filtros e OpenAPI compatíveis com o formato JSON real
+- [ ] Runtime e design-time usam a mesma configuração Npgsql/NodaTime
+- [ ] Atualização de contrato legado e migrations revisadas dentro do escopo autorizado
+
 Configuração:
 
 - [ ] Nenhum segredo/connection string/token commitado (vem do Consul / variável de ambiente)

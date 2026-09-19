@@ -1,6 +1,6 @@
 ---
 name: infinite-dotnet-api
-description: "Cria e revisa APIs .NET 10 da Infinite com CQRS, MediatR, EF Core/Postgres e Infinite.Core. Use para novos serviços, módulos, CRUDs, handlers, queries e estrutura de pastas."
+description: "Cria e revisa APIs .NET 10 da Infinite com CQRS, MediatR, EF Core/Postgres, NodaTime e Infinite.Core. Use para serviços, CRUDs, handlers, queries, datas, fusos e JSON."
 ---
 
 # Estrutura padrão — APIs .NET da Infinite
@@ -146,6 +146,13 @@ Ver `templates/` para os arquivos completos e `references/` para detalhes.
 
 ## Como aplicar
 
+**Datas, fusos e contrato com o frontend** → leia [references/datas-e-fusos.md](references/datas-e-fusos.md)
+ao criar um serviço ou alterar campos temporais, DTOs, filtros, JSON ou mappings. O padrão é
+`Instant` para instantes, transporte ISO-8601 UTC com `Z` e fuso escolhido na aplicação/frontend.
+`LocalDate`, `LocalTime` e `LocalDateTime` representam valores civis, sem conversão implícita de fuso.
+Verifique a versão real de `Infinite.Core.Postgres`: alterações locais na lib não comprovam que
+o pacote com `CoreEntity.DataInclusao/DataAlteracao` em `Instant?` já foi publicado no feed.
+
 **Novo serviço** → siga `references/novo-servico.md` e copie `templates/servico/`.
 
 **Novo CRUD** → copie `templates/modulo/` inteiro trocando os placeholders, e então:
@@ -160,6 +167,9 @@ Nada mais precisa ser registrado: handlers e validators são varridos por assemb
 `{{Entidade}}Mapping` por assembly do `AddInfiniteContext`.
 
 ## Referências
+
+- [references/datas-e-fusos.md](references/datas-e-fusos.md) — NodaTime, JSON UTC, entrada civil
+  com fuso IANA, auditoria e compatibilidade com consumidores existentes.
 
 - `references/libs-infinite.md` — superfície das libs `Infinite.Core.*` (Response, repositórios,
   paginação, entidade e mapping base, extensões de host).

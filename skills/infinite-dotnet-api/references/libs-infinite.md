@@ -12,6 +12,8 @@ próprio) — isso quebra o padrão compartilhado.
 | `Infinite.Core.Postgres` | `.Domain` | `CoreEntity`, `CoreTableMapping<T>`, `CoreViewMapping<T>`, `IReadRepository<T>`, `IWriteRepository<T>`, `InfiniteContext`, `AddInfiniteContext`, `PredicateBuilder` |
 | `Infinite.Core.WebHost` | API | `InfiniteApiController`, `AddInfiniteApiController`, `UseInfiniteApi` |
 | `Infinite.Core.Consul` | API | `AddConsulConfig` |
+| `NodaTime` | Domain quando expõe tipos temporais | `Instant`, `LocalDate`, `LocalTime`, `LocalDateTime`, `IClock` |
+| `NodaTime.Serialization.SystemTextJson` | API | Conversores JSON; registrar nas opções do serializador usado |
 
 Feed privado: `InfiniteNuget` (`src/nuget.config`). Versões são pinadas no `.csproj` — copie as do
 serviço de referência mais atual em vez de chutar.
@@ -80,10 +82,16 @@ IWriteRepository<TEntity>
 ## `Infinite.Core.Postgres.Models` / `.Mapping`
 
 ```csharp
-public sealed class {{Entidade}} : CoreEntity   // CoreEntity: Id (long), Ativo, DataCriacao, ...
+public sealed class {{Entidade}} : CoreEntity
+// CoreEntity: Id (long), Excluido (bool), UsuarioInclusao/UsuarioAlteracao (string?),
+// DataInclusao/DataAlteracao (Instant?) na versão com NodaTime.
 ```
 
 - Entidade **não** declara `Id` — vem de `CoreEntity`.
+- A auditoria é preenchida pelo contexto; não redeclare os campos de auditoria na entidade.
+- Instantes usam `Instant`; valores civis usam `LocalDate`, `LocalTime` ou `LocalDateTime`.
+  Agendamento vinculado a um local pode precisar de `Instant` e `TimeZoneId` separados.
+  Ver [datas-e-fusos.md](datas-e-fusos.md) para JSON e migração de contratos anteriores.
 - FK escalar `public long Id{{Relacionada}} { get; set; }` + navegação
   `public {{Relacionada}} {{Relacionada}} { get; set; } = null!;`
 - Coleção: `public List<{{Filho}}> {{Filhos}} { get; set; } = [];`
@@ -106,6 +114,8 @@ já vêm de `CoreTableMapping`. Para view read-only, use `CoreViewMapping<T>`.
 
 - `services.AddInfiniteContext(configuration, typeof(<MappingQualquer>).Assembly)` — registra
   `InfiniteContext` + repositórios; o assembly marca onde estão os `*Mapping`.
+- Na versão com NodaTime, runtime e `InfiniteContextFactoryBase` compartilham o configurador
+  com `UseNodaTime()`. Não crie conversores EF de `Instant` para `DateTime` em paralelo ao plugin.
 - `PredicateBuilder.True<T>()` + `.And(...)` — base dos `Filters`.
 
 ## `Infinite.Core.Extensions.Cqrs`
