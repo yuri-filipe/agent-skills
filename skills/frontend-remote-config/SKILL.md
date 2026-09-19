@@ -148,3 +148,5 @@ extends:
   e não devem ser alterados por aqui.
 - Datas e fusos (DTOs, formulários, filtros e exibição de datas vindas das APIs) ficam fora deste skill —
   use o skill `infinite-frontend-datetime`.
+- Consumo das APIs (paginação por headers, erros 400/401/403/422, JSON estrito) fica no skill
+  `infinite-frontend-api`; este skill só fornece a URL base.

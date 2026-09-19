@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Nova skill `infinite-frontend-api`: contrato HTTP das APIs Infinite para frontends (rotas,
+  paginação por headers e limite de CORS, formatos de erro, JSON estrito, Bearer) e template
+  TypeScript `api-contract.ts`.
 - Skills alinhadas ao código atual das libs `Infinite.Core`, `.Postgres`, `.WebHost` e `.Consul`:
   - `infinite-dotnet-api`: namespaces `Extensoes`, JSON NodaTime já registrado pela WebHost,
     Consul descartando `appsettings`, design-time lendo Consul, `consul-config.json` de exemplo,

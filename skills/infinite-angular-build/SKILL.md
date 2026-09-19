@@ -182,3 +182,5 @@ Pré-requisitos:
 - Skill `infinite-frontend-datetime` — contrato de datas e fusos com as APIs (instantes UTC,
   datas civis, fuso IANA em formulários). Use-a ao criar/ajustar DTOs, formulários, filtros ou
   exibição de datas no app; este skill cobre só build/deploy.
+- Skill `infinite-frontend-api` — contrato HTTP das APIs (paginação, erros, envio de DTOs) para o
+  código do app.

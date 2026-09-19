@@ -95,6 +95,7 @@ pelo servidor; ele falha:
   do endpoint.
 - Validação de campo volta **422** com `errors: [{ field, message }]`; regra de negócio volta **400**
   com `{ title, message }`. Mostre a mensagem do campo no próprio campo temporal quando existir.
+  O tratamento geral de erros, paginação e envio está na skill `infinite-frontend-api`.
 
 Em horários repetidos ou inexistentes por transições, apresente a validação retornada pela API.
 A política estrita ou leniente pertence à aplicação; não implemente uma resolução diferente

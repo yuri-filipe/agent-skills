@@ -16,11 +16,11 @@ function fixture() {
 }
 // Fixtures are retained in the OS temp directory for diagnosis; no user files are removed.
 test('validates the complete imported catalog', () => {
-  assert.equal(validate().length, 6);
+  assert.equal(validate().length, 7);
 });
 test('installs both platforms, preserves unrelated files and blocks local edits before writes', () => {
   const options = fixture();
-  assert.equal(install(options).length, 12);
+  assert.equal(install(options).length, 14);
   const extra = path.join(options.profile, '.agents/skills/unrelated.txt');
   fs.writeFileSync(extra, 'preserve');
   install(options);
@@ -38,7 +38,7 @@ test('refuses unmanaged collisions and adopts only identical content', () => {
   const destination = path.join(options.profile, '.agents/skills/frontend-remote-config');
   fs.cpSync(path.join(options.root, 'skills/frontend-remote-config'), destination, { recursive: true });
   assert.throws(() => install(options), /não gerenciada/);
-  assert.equal(install({ ...options, adopt: true }).length, 12);
+  assert.equal(install({ ...options, adopt: true }).length, 14);
   const other = fixture();
   const conflict = path.join(other.profile, '.agents/skills/frontend-remote-config');
   fs.mkdirSync(conflict, { recursive: true });
@@ -62,7 +62,7 @@ test('updates changed source, drops obsolete managed files and retains a backup'
 test('packages individual skills and hidden plugin manifests with resources intact', () => {
   const { root } = fixture();
   const output = packageSkills(root);
-  assert.equal(fs.readdirSync(output).filter(n => n.endsWith('.zip')).length, 8);
+  assert.equal(fs.readdirSync(output).filter(n => n.endsWith('.zip')).length, 9);
   for (const platform of ['codex', 'claude']) {
     const zip = unzipSync(fs.readFileSync(path.join(output, `infinite-skills-${platform}-1.0.0.zip`)));
     assert.ok(zip[`infinite-skills/.${platform}-plugin/plugin.json`]);

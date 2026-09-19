@@ -63,6 +63,7 @@ Regras:
 `effect` é o enum numérico `Effect` (`Success=1 … Validation=7`). O CORS da lib não expõe os
 headers de paginação: em chamada cross-origin o navegador não os entrega ao JS. Confirme que
 frontend e API estão na mesma origem, ou alinhe a exposição na lib, antes de depender deles.
+O lado do consumidor está na skill `infinite-frontend-api`.
 
 ## `Infinite.Core.Queries`
 
