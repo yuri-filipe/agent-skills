@@ -146,3 +146,5 @@ extends:
   entradas obsoletas regeneram no próximo dev/build. Use imports explícitos de `@/config` (não dependa de auto-import).
 - Este skill cobre **apenas o lado do frontend**. O template/scripts em `DevOps/Pipelines` já suportam o fluxo
   e não devem ser alterados por aqui.
+- Datas e fusos (DTOs, formulários, filtros e exibição de datas vindas das APIs) ficam fora deste skill —
+  use o skill `infinite-frontend-datetime`.

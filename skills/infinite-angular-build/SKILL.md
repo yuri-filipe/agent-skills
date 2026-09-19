@@ -179,3 +179,6 @@ Pré-requisitos:
 - `templates/azure-pipelines.yml` — exemplo completo comentado, copie e ajuste os placeholders.
 - `references/pipeline-internals.md` — stages, scripts e variáveis internas da pipeline, para
   quando o checklist acima não for suficiente para explicar uma falha.
+- Skill `infinite-frontend-datetime` — contrato de datas e fusos com as APIs (instantes UTC,
+  datas civis, fuso IANA em formulários). Use-a ao criar/ajustar DTOs, formulários, filtros ou
+  exibição de datas no app; este skill cobre só build/deploy.

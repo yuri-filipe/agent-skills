@@ -4,6 +4,8 @@ using Infinite.Core.WebHost.Extensions.Controllers;
 using Infinite.{{Servico}}.Domain.{{Modulo}}.{{Entidades}}.Mappers;
 using Infinite.{{Servico}}.Domain.{{Modulo}}.{{Entidades}}.QueryHandlers;
 using Infinite.{{Servico}}.Infrastructure.Mappings.{{Modulo}};
+using NodaTime;
+using NodaTime.Serialization.SystemTextJson;
 
 namespace Infinite.{{Servico}};
 
@@ -14,6 +16,7 @@ public class Startup(IConfiguration configuration)
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddInfiniteApiController(configuration, NameApi);
+        AddTemporalJson(services);
 
         // marcador de assembly do Infrastructure (onde vivem os *Mapping)
         services.AddInfiniteContext(configuration, typeof({{Entidade}}Mapping).Assembly);
@@ -24,6 +27,14 @@ public class Startup(IConfiguration configuration)
         AddMappers(services);
 
         // Add{{Modulo}}Services(services);
+    }
+
+    public static IServiceCollection AddTemporalJson(IServiceCollection services)
+    {
+        services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
+            options.JsonSerializerOptions.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb));
+
+        return services;
     }
 
     public static IServiceCollection AddMappers(IServiceCollection services)

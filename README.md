@@ -5,11 +5,12 @@ referências e templates da Infinite. O conteúdo canônico vive em `skills/`.
 
 | Skill | Finalidade |
 |---|---|
-| [infinite-dotnet-api](skills/infinite-dotnet-api/SKILL.md) | Estrutura de APIs .NET e módulos CQRS |
+| [infinite-dotnet-api](skills/infinite-dotnet-api/SKILL.md) | Estrutura de APIs .NET, módulos CQRS e NodaTime |
 | [infinite-api-logs](skills/infinite-api-logs/SKILL.md) | Logs estruturados úteis em APIs .NET |
 | [infinite-auth-zitadel](skills/infinite-auth-zitadel/SKILL.md) | Autenticação e autorização com Zitadel |
 | [infinite-angular-build](skills/infinite-angular-build/SKILL.md) | Contrato de build/deploy Angular |
 | [frontend-remote-config](skills/frontend-remote-config/SKILL.md) | Configuração de frontend Vite/Vue via Consul |
+| [infinite-frontend-datetime](skills/infinite-frontend-datetime/SKILL.md) | Datas e fusos em frontends que consomem APIs NodaTime |
 
 ## 1. Clonar e preparar
 
@@ -68,7 +69,7 @@ não é consultado a cada mensagem. Veja [atualização e versões](docs/updatin
 npm run package
 ```
 
-Em `dist/v1.0.0/` serão gerados cinco ZIPs individuais, dois ZIPs de plugins
+Em `dist/v1.0.0/` será gerado um ZIP individual por skill, dois ZIPs de plugins
 (Codex/OpenAI e Claude), checksums SHA-256 e um arquivo de proveniência.
 
 No Claude web/Cowork, envie o ZIP individual em **Customize → Skills → Upload a skill**.

@@ -8,7 +8,7 @@
 | Codex/OpenAI com plugins | ZIP `infinite-skills-codex-*` | Fluxo de instalação/publicação suportado pelo host |
 | Claude com plugins | ZIP `infinite-skills-claude-*` | Fluxo de instalação suportado pelo host |
 
-As cinco skills compartilham a estrutura Agent Skills (`SKILL.md`, referências e
+Todas as skills compartilham a estrutura Agent Skills (`SKILL.md`, referências e
 templates). Os pacotes de plugins usam manifestos separados e o mesmo conteúdo.
 Compatibilidade de formato não garante disponibilidade dos mesmos conectores,
 bibliotecas privadas, scripts, rede ou execução em todos os aplicativos.

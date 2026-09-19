@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- `infinite-dotnet-api`: contrato de datas e fusos com NodaTime (`references/datas-e-fusos.md`), JSON ISO-8601 UTC e templates ajustados.
+- Nova skill `infinite-frontend-datetime` para datas e fusos nos frontends.
+- `infinite-angular-build` e `frontend-remote-config` apontam para a nova skill de datas.
 - Scripts de instalação, atualização, validação e empacotamento aceitam Windows PowerShell 5.1.
 - CI verifica os pontos de entrada também no Windows PowerShell, além do PowerShell 7.
 
