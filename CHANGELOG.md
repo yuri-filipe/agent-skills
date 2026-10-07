@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Nova skill `postgres-permissoes-api`: gera o script SQL de login e permissões de uma API no
+  PostgreSQL (`api_{schema}_qa`/`api_{schema}_prd`, grupos `grp_api_qa`/`grp_api_prd`, schema por API,
+  objetos atuais e futuros). Produção sem DELETE e sem DDL, com auditoria que aborta em violação.
 - `infinite-api-logs`: padrão obrigatório da documentação .NET — métodos `[LoggerMessage]` gerados em
   compilação numa classe por módulo (`{{Modulo}}/Common/Observabilidade/{{Modulo}}Logs.cs`), código de negócio
   só chama, EventId por bloco de módulo, `Logging:LogLevel` no Consul e `.editorconfig` com

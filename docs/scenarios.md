@@ -12,6 +12,7 @@ Nenhum teste deve publicar, implantar ou mudar bancos sem que isso faça parte d
 | frontend-remote-config | Migrar este Vite para config do Consul | Configurar autenticação da API | Configuração síncrona com os templates e contrato da pipeline |
 | infinite-frontend-api | Tratar os erros de validação deste formulário vindos da API | Configurar o Dockerfile da API | 422 mapeado por campo, 400 de negócio como aviso, paginação pelos headers |
 | infinite-frontend-datetime | Ajustar este formulário de agendamento para o fuso do evento | Configurar a pipeline do Angular | Envia instantes UTC com `Z`, mantém datas civis sem conversão |
+| postgres-permissoes-api | Criar o login de QA da API auto_paroquia no Postgres | Otimizar um SELECT lento no Postgres | Script `DO` único com `api_auto_paroquia_qa`, grupo `grp_api_qa` e default privileges |
 
 Registre aplicativo/versão, commit da skill, entrada, evidência e resultado ao
 executar esses cenários. A importação inicial não significa que todos já passaram.

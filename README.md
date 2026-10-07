@@ -12,6 +12,7 @@ referências e templates da Infinite. O conteúdo canônico vive em `skills/`.
 | [frontend-remote-config](skills/frontend-remote-config/SKILL.md) | Configuração de frontend Vite/Vue via Consul |
 | [infinite-frontend-datetime](skills/infinite-frontend-datetime/SKILL.md) | Datas e fusos em frontends que consomem APIs NodaTime |
 | [infinite-frontend-api](skills/infinite-frontend-api/SKILL.md) | Contrato HTTP das APIs para frontends: paginação, erros e envio |
+| [postgres-permissoes-api](skills/postgres-permissoes-api/SKILL.md) | Script SQL de login e permissões de API no PostgreSQL (QA e produção) |
 
 ## 1. Clonar e preparar
 
