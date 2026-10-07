@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Nova skill `infinite-electron-angular`: app desktop Electron + Angular (Material 3) no padrão do
+  Infinite.Tools — protocolo `app://` com CSP no header, preload tipado, IPC por domínio, fontes
+  embutidas e instalador NSIS. Pergunta a persistência (JSON local, SQLite ou PostgreSQL) e, no
+  PostgreSQL, o nome do schema; gera a seção de string de conexão em Configurações, cifrada com
+  `safeStorage`.
 - Nova skill `postgres-permissoes-api`: gera o script SQL de login e permissões de uma API no
   PostgreSQL (`api_{schema}_qa`/`api_{schema}_prd`, grupos `grp_api_qa`/`grp_api_prd`, schema por API,
   objetos atuais e futuros). Produção sem DELETE e sem DDL, com auditoria que aborta em violação.

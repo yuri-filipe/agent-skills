@@ -13,6 +13,7 @@ referências e templates da Infinite. O conteúdo canônico vive em `skills/`.
 | [infinite-frontend-datetime](skills/infinite-frontend-datetime/SKILL.md) | Datas e fusos em frontends que consomem APIs NodaTime |
 | [infinite-frontend-api](skills/infinite-frontend-api/SKILL.md) | Contrato HTTP das APIs para frontends: paginação, erros e envio |
 | [postgres-permissoes-api](skills/postgres-permissoes-api/SKILL.md) | Script SQL de login e permissões de API no PostgreSQL (QA e produção) |
+| [infinite-electron-angular](skills/infinite-electron-angular/SKILL.md) | Apps desktop Electron + Angular: protocolo `app://`, IPC tipado e persistência em JSON, SQLite ou PostgreSQL |
 
 ## 1. Clonar e preparar
 
